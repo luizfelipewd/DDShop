@@ -94,7 +94,7 @@ namespace DDShop.Controllers
             {
                 context.Products.Remove(product);
                 await context.SaveChangesAsync();
-                return Ok("Categoria removida com sucesso");
+                return Ok("Produto removido com sucesso");
             }
             catch (Exception)
             {
