@@ -25,8 +25,10 @@ namespace DDShop.Controllers
 
             try
             {
+                model.Role = "employee";
                 context.Users.Add(model);
                 await context.SaveChangesAsync();
+                model.Password = "";
                 return model;
             }
             catch (Exception)
@@ -46,6 +48,7 @@ namespace DDShop.Controllers
                 return NotFound(new { message = "Usuário ou senha inválidos" });
 
             var token = TokenService.GenerateToken(user);
+            user.Password = "";
 
             return new
             {
