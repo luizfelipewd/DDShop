@@ -4,16 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using DDShop.Data;
 using DDShop.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DDShop.Controllers
 {
-    [Route("products")]
+    [Route("v1/products")]
     public class ProductController : ControllerBase
     {
         [HttpGet]
         [Route("")]
+        [AllowAnonymous]
+        [ResponseCache(VaryByHeader = "User-Agent", Location = ResponseCacheLocation.Any, Duration = 30)]
+        // [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<ActionResult<List<Product>>> Get([FromServices] DataContext context)
         {
             var products = await context.Products.Include(x => x.Category).AsNoTracking().ToListAsync();
@@ -22,6 +26,7 @@ namespace DDShop.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Product>> GetById(int id, [FromServices] DataContext context)
         {
             var product = await context.Products.Include(x => x.Category).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
@@ -38,6 +43,7 @@ namespace DDShop.Controllers
 
         [HttpPost]
         [Route("")]
+        [Authorize(Roles = "employee")]
         public async Task<ActionResult<List<Product>>> Post([FromBody] Product model, [FromServices] DataContext context)
         {
             if (!ModelState.IsValid)
@@ -58,6 +64,7 @@ namespace DDShop.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
+        [Authorize(Roles = "employee")]
         public async Task<ActionResult<List<Product>>> Put(int id, [FromBody] Product model, [FromServices] DataContext context)
         {
             if (id != model.Id)
@@ -84,6 +91,7 @@ namespace DDShop.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
+        [Authorize(Roles = "employee")]
         public async Task<ActionResult<List<Product>>> Delete(int id, [FromServices] DataContext context)
         {
             var product = await context.Products.FirstOrDefaultAsync(x => x.Id == id);
