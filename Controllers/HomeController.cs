@@ -13,7 +13,7 @@ namespace DDShop.Controllers
         public async Task<ActionResult<dynamic>> Get([FromServices] DataContext context)
         {
             var manager = new User { Id = 1, Username = "gerente", Password = "gerente", Role = "manager" };
-            var employee = new User { Id = 1, Username = "funcionario", Password = "funcionario", Role = "employee" };
+            var employee = new User { Id = 2, Username = "funcionario", Password = "funcionario", Role = "employee" };
             var category = new Category { Id = 1, Title = "Categoria 1" };
             var product = new Product { Id = 1, Title = "Produto 1", Category = category, Price = 299, Description = "Descrição do produto" };
 
